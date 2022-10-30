@@ -466,6 +466,18 @@ describe("VersionCommand", () => {
     });
   });
 
+  describe("--dry-run", () => {
+    it("auto-rejects the confirmation prompt", async () => {
+      const testDir = await initFixture("normal");
+      await lernaVersion(testDir)("--dry-run");
+
+      expect(promptConfirmation).not.toHaveBeenCalled();
+
+      const consoleMessages = await loggingOutput();
+      expect(consoleMessages).toContain("Auto-rejected. This is a dry-run.");
+    });
+  });
+
   describe("--exact", () => {
     it("updates matching local dependencies of published packages with exact versions", async () => {
       const testDir = await initFixture("normal");
